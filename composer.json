@@ -1,0 +1,54 @@
+{
+    "name": "danilopolani/laravel-fusionauth-jwt",
+    "description": "Laravel Auth guard for FusionAuth JWT",
+    "keywords": [
+        "danilopolani",
+        "laravel-fusionauth-jwt"
+    ],
+    "homepage": "https://github.com/danilopolani/laravel-fusionauth-jwt",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Danilo Polani",
+            "email": "danilo.polani@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0",
+        "firebase/php-jwt": "^5.4",
+        "illuminate/auth": "^8.0",
+        "illuminate/http": "^8.0",
+        "illuminate/contracts": "^8.0",
+        "illuminate/routing": "^8.0",
+        "illuminate/support": "^8.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0",
+        "pestphp/pest": "^1.12"
+    },
+    "autoload": {
+        "psr-4": {
+            "DaniloPolani\\FusionAuthJwt\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DaniloPolani\\FusionAuthJwt\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/pest"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "DaniloPolani\\FusionAuthJwt\\FusionAuthJwtServiceProvider"
+            ]
+        }
+    }
+}
