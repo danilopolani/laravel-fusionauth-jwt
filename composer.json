@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": "^8.0.2",
-        "firebase/php-jwt": "^5.4",
+        "firebase/php-jwt": "^6.4",
         "illuminate/auth": "^9.0|^10.0",
         "illuminate/http": "^9.0|^10.0",
         "illuminate/contracts": "^9.0|^10.0",

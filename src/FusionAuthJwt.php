@@ -5,6 +5,7 @@ namespace DaniloPolani\FusionAuthJwt;
 use DaniloPolani\FusionAuthJwt\Exceptions\InvalidTokenAlgorithmException;
 use DaniloPolani\FusionAuthJwt\Exceptions\InvalidTokenException;
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
@@ -40,16 +41,16 @@ class FusionAuthJwt
      */
     public static function decode(string $jwt): array
     {
-        $supportedAlgs = Config::get('fusionauth.supported_algs');
+        $algorithm = Config::get('fusionauth.supported_algs.0');
 
-        if (!in_array($supportedAlgs[0] ?? null, [self::ALGO_RS256, self::ALGO_HS256])) {
+        if (!in_array($algorithm, [self::ALGO_RS256, self::ALGO_HS256])) {
             throw new InvalidTokenAlgorithmException('Unsupported token signing algorithm configured. Must be either RS256 or HS256.');
         }
 
-        if ($supportedAlgs[0] === self::ALGO_RS256) {
-            $data = JWT::decode($jwt, self::fetchPublicKeys(), $supportedAlgs);
+        if ($algorithm === self::ALGO_RS256) {
+            $data = JWT::decode($jwt, self::fetchPublicKeys($algorithm));
         } else {
-            $data = JWT::decode($jwt, Config::get('fusionauth.client_secret'), $supportedAlgs);
+            $data = JWT::decode($jwt, new Key(Config::get('fusionauth.client_secret'), $algorithm));
         }
 
         self::validate($data);
@@ -88,14 +89,16 @@ class FusionAuthJwt
      *
      * @return array
      */
-    protected static function fetchPublicKeys(): array
+    protected static function fetchPublicKeys(string $algorithm): array
     {
         return Cache::remember(
             'fusionauth.public_keys',
             self::JWKS_CACHE_TTL,
             fn () => Http::get('https://' . Config::get('fusionauth.domain') . '/api/jwt/public-key')
                 ->throw()
-                ->json('publicKeys', [])
+                ->collect('publicKeys', [])
+                ->map(fn (string $key) => new Key($key, $algorithm))
+                ->toArray()
         );
     }
 }
