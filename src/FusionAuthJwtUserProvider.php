@@ -59,4 +59,12 @@ class FusionAuthJwtUserProvider implements UserProvider
     {
         return false;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false)
+    {
+        return;
+    }
 }
