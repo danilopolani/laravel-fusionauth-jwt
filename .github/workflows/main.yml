@@ -1,21 +1,15 @@
 name: run-tests
 
-on:
-    push:
-        branches:
-            - master
-            - "*.x"
-    pull_request:
+on: [push, pull_request]
 
 jobs:
     test:
-        runs-on: ubuntu-22.04
+        runs-on: ubuntu-latest
         strategy:
             fail-fast: true
             matrix:
                 php: [8.3, 8.2, 8.1, 8.0]
-                laravel: ["^11.0", "^10.0", "^9.0"]
-                dependency-version: [prefer-lowest, prefer-stable]
+                laravel: [11, 10, 9]
                 include:
                     - laravel: "^11.0"
                       testbench: 9.*
@@ -36,7 +30,7 @@ jobs:
                       laravel: 9
                 stability: [prefer-lowest, prefer-stable]
 
-        name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.dependency-version }}
+        name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
 
         steps:
             - name: Checkout code
@@ -56,6 +50,6 @@ jobs:
             - name: Install dependencies
               run: |
                   composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
-                  composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
+                  composer update --prefer-dist --no-interaction
             - name: Execute tests
               run: vendor/bin/pest
