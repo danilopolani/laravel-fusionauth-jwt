@@ -59,6 +59,14 @@ class FusionAuthJwtUser implements Authenticatable
     /**
      * {@inheritDoc}
      */
+    public function getAuthPasswordName()
+    {
+        return '';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getRememberToken()
     {
         return '';
