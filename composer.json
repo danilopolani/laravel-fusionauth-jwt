@@ -53,5 +53,7 @@
                 "DaniloPolani\\FusionAuthJwt\\FusionAuthJwtServiceProvider"
             ]
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
