@@ -28,3 +28,16 @@ test('::hasRole() with a logged in user', function () {
     expect(RoleManager::hasRole('user'))->toBeTrue();
     expect(RoleManager::hasRole('foobar'))->toBeFalse();
 });
+
+test('::onTheseRoles() false when not logged in', function () {
+    expect(RoleManager::onTheseRoles(['user'], fn() => true))->toBeNull();
+});
+
+test('::onTheseRoles() with a logged in user', function () {
+    Auth::guard('fusionauth')->setUser(
+        new FusionAuthJwtUser(['roles' => ['user', 'admin']])
+    );
+
+    expect(RoleManager::onTheseRoles(['user'], fn() => true))->toBeTrue();
+    expect(RoleManager::onTheseRoles(['foobar'], fn() => true))->toBeNull();
+});
