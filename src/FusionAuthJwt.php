@@ -6,6 +6,7 @@ use DaniloPolani\FusionAuthJwt\Exceptions\InvalidTokenAlgorithmException;
 use DaniloPolani\FusionAuthJwt\Exceptions\InvalidTokenException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
@@ -74,7 +75,7 @@ class FusionAuthJwt
 
         $possibleAudiences = [
             // Fallback to client_id to avoid "null $token->aud" matching "null fusionauth.audience"
-            Config::get('fusionauth.audience', Config::get('fusionauth.client_id')),
+            ...Arr::wrap(Config::get('fusionauth.audience', Config::get('fusionauth.client_id'))),
             Config::get('fusionauth.client_id'),
         ];
 
