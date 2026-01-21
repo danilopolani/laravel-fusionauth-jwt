@@ -79,9 +79,11 @@ class FusionAuthJwt
             Config::get('fusionauth.client_id'),
         ];
 
-        // Validate aud against the audience and client id (may be a token from client_credentials)
-        if (!in_array($token->aud, $possibleAudiences)) {
-            throw new InvalidTokenException('Audience "' . $token->aud . '" is not authorized.');
+        $tokenAudience = Arr::wrap($token->aud);
+
+        // Validate that at least one of the elements of $tokenAudience is present in $possibleAudiences
+        if (!array_intersect($tokenAudience, $possibleAudiences)) {
+            throw new InvalidTokenException('Audience "' . json_encode($tokenAudience) . '" is not authorized.');
         }
     }
 
