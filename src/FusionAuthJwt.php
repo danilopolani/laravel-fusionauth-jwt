@@ -99,7 +99,7 @@ class FusionAuthJwt
             self::JWKS_CACHE_TTL,
             fn () => Http::get('https://' . Config::get('fusionauth.domain') . '/api/jwt/public-key')
                 ->throw()
-                ->collect('publicKeys', [])
+                ->collect('publicKeys')
                 ->map(fn (string $key) => new Key($key, $algorithm))
                 ->toArray()
         );
