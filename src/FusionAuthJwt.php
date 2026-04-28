@@ -94,14 +94,18 @@ class FusionAuthJwt
      */
     protected static function fetchPublicKeys(string $algorithm): array
     {
-        return Cache::remember(
-            'fusionauth.v2.public_keys',
+        $pems = Cache::remember(
+            'fusionauth.v3.public_keys',
             self::JWKS_CACHE_TTL,
             fn () => Http::get('https://' . Config::get('fusionauth.domain') . '/api/jwt/public-key')
                 ->throw()
                 ->collect('publicKeys')
-                ->map(fn (string $key) => new Key($key, $algorithm))
-                ->toArray()
+                ->all()
+        );
+
+        return array_map(
+            fn (string $pem) => new Key($pem, $algorithm),
+            $pems,
         );
     }
 }
